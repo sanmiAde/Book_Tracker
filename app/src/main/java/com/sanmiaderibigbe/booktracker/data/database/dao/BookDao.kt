@@ -11,7 +11,7 @@ import com.sanmiaderibigbe.booktracker.data.model.GoalWithBooks
 interface BookDao {
 
     @Query("SELECT * FROM books_table ORDER BY id")
-    fun getBooks(): List<Book>
+    fun getBooks(): LiveData<List<Book>>
 
 
     @Query("SELECT * FROM books_table WHERE id =:bookid ")

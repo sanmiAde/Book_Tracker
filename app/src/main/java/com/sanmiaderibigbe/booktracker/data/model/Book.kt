@@ -11,7 +11,7 @@ import java.util.*
  *
  */
 data class Book(
-        override val name: String,
+        override var name: String,
         override val author: String,
         override val genre: String,
         override val numberOfPages: Int,

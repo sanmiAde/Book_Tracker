@@ -1,4 +1,4 @@
-package com.sanmiaderibigbe.booktracker.ui.reading
+package com.sanmiaderibigbe.booktracker.ui.read
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -8,22 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.sanmiaderibigbe.booktracker.R
 
-class ReadingFragment : Fragment() {
+class ReadFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ReadingFragment()
+        fun newInstance() = ReadFragment()
     }
 
-    private lateinit var viewModel: ReadingViewModel
+    private lateinit var viewModel: ReadViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.reading_fragment, container, false)
+        return inflater.inflate(R.layout.read_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ReadingViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(ReadViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

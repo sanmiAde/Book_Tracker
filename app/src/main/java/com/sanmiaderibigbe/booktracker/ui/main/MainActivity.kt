@@ -1,31 +1,59 @@
-package com.sanmiaderibigbe.booktracker
+package com.sanmiaderibigbe.booktracker.ui.main
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.sanmiaderibigbe.booktracker.ui.reading.ReadingFragment
+import com.sanmiaderibigbe.booktracker.R
+import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
+import com.sanmiaderibigbe.booktracker.ui.read.ReadViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private lateinit var viewModel: MainViewModel
+    private val TAG: String  = MainActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        initViewModel()
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
+        initDrawer()
+    }
+
+    private fun initViewModel(){
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+
+        viewModel.getBookList().observe(this, Observer { it ->
+            Log.d(TAG,it.toString())
+
+            (1..(it?.size!! -1))
+                    .forEach { i ->
+                        test.append(it[i].name +"\n")
+                    }
+        })
+    }
+
+    fun initDrawer() {
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -62,7 +90,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
            R.id.nav_read -> {
-
+                startActivity(ReadActivity.newInstance(this))
            }
        }
 
