@@ -27,7 +27,7 @@ interface BookDao {
     fun deleteOrder(quotes: Book)
 
     @Query("SELECT * FROM books_table WHERE state =:bookState ")
-    fun getBooksByBookState(bookState: BookState): List<Book>
+    fun getBooksByBookState(bookState: BookState): LiveData<List<Book>>
 
     @Query("SELECT * FROM books_table WHERE id =:bookid ")
     @Transaction

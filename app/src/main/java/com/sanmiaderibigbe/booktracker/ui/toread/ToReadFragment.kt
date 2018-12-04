@@ -1,4 +1,4 @@
-package com.sanmiaderibigbe.booktracker.ui.read
+package com.sanmiaderibigbe.booktracker.ui.ui.toread
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -12,44 +12,33 @@ import android.view.View
 import android.view.ViewGroup
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
+import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
 
 
-class ReadFragment : Fragment() {
-
-
-    private lateinit var mViewModel: ReadViewModel
-    //private lateinit var adapter: BookListAdapter
-    private val TAG: String  = ReadActivity::class.java.name
+class ToReadFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ReadFragment()
+        fun newInstance() = ToReadFragment()
     }
 
-    private lateinit var viewModel: ReadViewModel
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-
-        return inflater.inflate(R.layout.read_fragment, container, false)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
+    private lateinit var viewModel: ToReadViewModel
+    private val TAG: String  = ToReadFragment::class.java.name
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel = ViewModelProviders.of(this).get(ReadViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(ToReadViewModel::class.java)
         val adapter = initRecyclerView(view)
         //getBooks(initRecyclerView())
         getBooks(adapter)
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.to_read_fragment, container, false)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // TODO: Use the ViewMode
 
     }
 
@@ -63,7 +52,7 @@ class ReadFragment : Fragment() {
     }
 
     private fun getBooks(adapter: BookListAdapter) {
-        mViewModel.getBookList().observe(this, Observer { it ->
+        viewModel.getBookList().observe(this, Observer { it ->
             Log.d(TAG, it.toString())
             adapter.setBooks(it)
 

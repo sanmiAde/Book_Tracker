@@ -2,24 +2,38 @@ package com.sanmiaderibigbe.booktracker.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.databinding.AdapterListBookItemBinding
 
 class BookListAdapter(context: Context) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    private var bookList: List<Book>? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+        val binding = AdapterListBookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       return bookList?.size ?: 0
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBindViewHolder(holder: ViewHolder, p1: Int) {
+       val book: Book? = bookList?.get(p1)
+        holder.binding.book = book
     }
 
-    class ViewHolder(private val binding: AdapterListBookItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+
+    fun setBooks(books: List<Book>?){
+        bookList = books
+        notifyDataSetChanged()
+    }
+
+    class ViewHolder( val binding: AdapterListBookItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
 }

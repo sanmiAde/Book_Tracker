@@ -8,20 +8,23 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.sanmiaderibigbe.booktracker.R
+import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
 import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
-import com.sanmiaderibigbe.booktracker.ui.read.ReadViewModel
+import com.sanmiaderibigbe.booktracker.ui.toread.ToReadActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var viewModel: MainViewModel
-    private val TAG: String  = MainActivity::class.java.name
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var mViewModel: ReadingViewModel
+    private val TAG: String  = ReadingActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         initViewModel()
-
+        recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        getBooks(initRecyclerView())
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -40,20 +44,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this).get(ReadingViewModel::class.java)
 
+    }
 
-        viewModel.getBookList().observe(this, Observer { it ->
-            Log.d(TAG,it.toString())
+    private fun getBooks(adapter: BookListAdapter) {
+        mViewModel.getBookList().observe(this, Observer { it ->
+            Log.d(TAG, it.toString())
+            adapter.setBooks(it)
 
-            (1..(it?.size!! -1))
-                    .forEach { i ->
-                        test.append(it[i].name +"\n")
-                    }
         })
     }
 
-    fun initDrawer() {
+    private fun initDrawer() {
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -92,9 +95,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
            R.id.nav_read -> {
                 startActivity(ReadActivity.newInstance(this))
            }
+
+            R.id.nav_to_read -> {
+                startActivity(ToReadActivity.newInstance(this))
+            }
        }
 
        drawer_layout.closeDrawer(GravityCompat.START)
        return true
+    }
+
+    private fun initRecyclerView(): BookListAdapter {
+        val adapter = BookListAdapter(this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        return adapter
     }
 }

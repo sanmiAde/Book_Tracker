@@ -13,4 +13,9 @@
     <string name="nav_to_read">TO READ</string>
     <string name="nav_goals">GOALS</string>
     <string name="nav_statistics">STATISTICS</string>
+    <string name="to_read">TO READ</string>
+    <string name="read">READ</string>
+    <string name="goals">GOALS</string>
+    <string name="statistics">STATISTICS</string>
+    <string name="reading">READING</string>
 </resources>
