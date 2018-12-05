@@ -2,29 +2,41 @@ package com.sanmiaderibigbe.booktracker.ui.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
+import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
 import com.sanmiaderibigbe.booktracker.ui.toread.ToReadActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, BookListAdapter.OnMenuClickHandler {
+
+    override fun onClick(book: Book) {
+        Toast.makeText(this, book.author, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClick() {
+        Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+    }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: ReadingViewModel
-    private val TAG: String  = ReadingActivity::class.java.name
+    private val TAG: String = ReadingActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +48,19 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         getBooks(initRecyclerView())
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            initSearchDialog()
         }
 
         initDrawer()
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         mViewModel = ViewModelProviders.of(this).get(ReadingViewModel::class.java)
 
     }
 
     private fun getBooks(adapter: BookListAdapter) {
         mViewModel.getBookList().observe(this, Observer { it ->
-            Log.d(TAG, it.toString())
             adapter.setBooks(it)
 
         })
@@ -92,23 +102,45 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-           R.id.nav_read -> {
+            R.id.nav_read -> {
                 startActivity(ReadActivity.newInstance(this))
-           }
+            }
 
             R.id.nav_to_read -> {
                 startActivity(ToReadActivity.newInstance(this))
             }
-       }
+        }
 
-       drawer_layout.closeDrawer(GravityCompat.START)
-       return true
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
     }
 
     private fun initRecyclerView(): BookListAdapter {
-        val adapter = BookListAdapter(this)
+        val adapter = BookListAdapter(this, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         return adapter
+    }
+
+    /***
+     * Shows search dialog. User call search throuh api or manually add books.
+     */
+    private fun initSearchDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        val searchDialogView  = this.layoutInflater.inflate(R.layout.dialog_seach, null)
+        val searchQuery = searchDialogView.findViewById<EditText>(R.id.search_text)
+        alertDialogBuilder.setTitle(getString(R.string.search_for_book))
+
+
+        alertDialogBuilder.setPositiveButton(getString(R.string.search)) { dialogInterface, i ->
+            Toast.makeText(this,searchQuery.text, Toast.LENGTH_SHORT).show()
+        }.setNegativeButton(getString(R.string.manual)) { dialogInterface: DialogInterface?, i: Int ->
+            dialogInterface?.cancel()
+        }.setNeutralButton( getString(R.string.cancel)) { dialogInterface: DialogInterface?, i: Int ->
+            dialogInterface?.cancel()
+        }.setView(searchDialogView)
+
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }

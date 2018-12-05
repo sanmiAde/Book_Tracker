@@ -18,4 +18,8 @@
     <string name="goals">GOALS</string>
     <string name="statistics">STATISTICS</string>
     <string name="reading">READING</string>
+    <string name="search_for_book">Search for book</string>
+    <string name="search">SEARCH</string>
+    <string name="manual">MANUAL</string>
+    <string name="cancel">CANCEL</string>
 </resources>

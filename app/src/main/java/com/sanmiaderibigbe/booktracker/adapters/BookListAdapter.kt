@@ -8,9 +8,15 @@ import android.view.ViewGroup
 import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.databinding.AdapterListBookItemBinding
 
-class BookListAdapter(context: Context) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
+class BookListAdapter(context: Context, val clickHandler: OnMenuClickHandler) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
     private var bookList: List<Book>? = null
+
+   interface OnMenuClickHandler{
+       fun onClick()
+
+       fun onClick(book: Book)
+   }
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val binding = AdapterListBookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -33,7 +39,24 @@ class BookListAdapter(context: Context) : RecyclerView.Adapter<BookListAdapter.V
         notifyDataSetChanged()
     }
 
-    class ViewHolder( val binding: AdapterListBookItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder( val binding: AdapterListBookItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+
+        init {
+            binding.itemMenu.setOnClickListener(this)
+            binding.bookNameTxt.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            when(view?.id)  {
+                binding.itemMenu.id -> {
+                    clickHandler.onClick()
+                }
+                binding.bookNameTxt.id -> {
+                    clickHandler.onClick(binding.book!!)
+                }
+
+            }
+        }
 
     }
 }

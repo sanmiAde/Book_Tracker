@@ -10,12 +10,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
+import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
 
 
-class ToReadFragment : Fragment() {
+class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
+
+    override fun onClick(book: Book) {
+        Toast.makeText(activity, book.author, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClick() {
+        Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show()
+    }
 
     companion object {
         fun newInstance() = ToReadFragment()
@@ -44,7 +54,7 @@ class ToReadFragment : Fragment() {
 
 
     private fun initRecyclerView(view: View): BookListAdapter {
-        val adapter = BookListAdapter(activity!!)
+        val adapter = BookListAdapter(activity!!, this)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
