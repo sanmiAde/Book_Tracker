@@ -11,4 +11,8 @@ class ReadingViewModel(application: Application): BaseViewModel(application) {
     override fun getBookList(): LiveData<List<Book>> {
         return  repository.getBookByState(BookState.READING)
     }
+
+
+
+
 }

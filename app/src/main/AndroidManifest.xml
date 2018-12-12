@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.read.ReadActivity" />
-        <activity android:name=".ui.toread.ToReadActivity"></activity>
+        <activity android:name=".ui.toread.ToReadActivity" />
+        <activity android:name=".ui.ui.add.AddActivity"></activity>
     </application>
 
 </manifest>

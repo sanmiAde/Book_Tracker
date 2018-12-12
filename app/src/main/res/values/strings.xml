@@ -22,4 +22,9 @@
     <string name="search">SEARCH</string>
     <string name="manual">MANUAL</string>
     <string name="cancel">CANCEL</string>
+    <string name="move_to_read">Move to read</string>
+    <string name="move_to_read_later">Move to read later</string>
+    <string name="share_book">Share</string>
+    <string name="delete">Delete</string>
+    <string name="move_to_reading">Move to reading</string>
 </resources>

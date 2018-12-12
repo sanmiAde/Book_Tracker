@@ -28,10 +28,36 @@ class Repository(application: Application, private val appExecutors: AppExecutor
         return GetBookByState(bookDao, state).doInBackground()
     }
 
+    fun updateBook(book: Book) {
+       appExecutors.diskIO().execute{
+           bookDao.update(book)
+       }
+    }
+
+    fun saveBook(book: Book) {
+        appExecutors.diskIO().execute {
+            bookDao.insert(book)
+        }
+    }
+
+    fun deleteBook(book: Book) {
+        appExecutors.diskIO().execute {
+            bookDao.delete(book)
+        }
+    }
+
     class GetBookByState(private val dao: BookDao, private val state: BookState) : AsyncTask<Void, Void, LiveData<List<Book>>>() {
         public override fun doInBackground(vararg p0: Void?): LiveData<List<Book>> {
             return dao.getBooksByBookState(state)
         }
+
+    }
+
+    class DeleteBook(private val dao: BookDao) : AsyncTask<Book, Void,Unit>() {
+        public override fun doInBackground(vararg books: Book?): Unit {
+            return dao.update(books[0]!!)
+        }
+
 
     }
 

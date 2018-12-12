@@ -11,4 +11,24 @@ open abstract class BaseViewModel(application: Application) : AndroidViewModel(a
 
     protected val repository: Repository = Repository.getRepository(application)
     abstract fun getBookList() : LiveData<List<Book>>
+
+    fun moveToReading(book: Book) {
+        val updatedBook = book.copy(state = BookState.READING)
+        repository.updateBook(updatedBook)
+    }
+
+    fun moveToReadLater(book: Book){
+        val updatedBook = book.copy(state = BookState.TO_READ)
+        repository.updateBook(updatedBook)
+    }
+
+    fun moveToRead(book: Book) {
+        val updatedBook = book.copy(state = BookState.READ)
+        repository.updateBook(updatedBook)
+    }
+
+    fun deleteBook(book: Book){
+        repository.deleteBook(book)
+    }
+
 }

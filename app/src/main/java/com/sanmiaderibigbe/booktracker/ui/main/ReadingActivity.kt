@@ -11,14 +11,16 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.PopupMenu
 import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
 import com.sanmiaderibigbe.booktracker.data.model.Book
+import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
 import com.sanmiaderibigbe.booktracker.ui.toread.ToReadActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,17 +28,45 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, BookListAdapter.OnMenuClickHandler {
 
-    override fun onClick(book: Book) {
-        Toast.makeText(this, book.author, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onClick() {
-        Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
-    }
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: ReadingViewModel
+    private lateinit var adapter: BookListAdapter
     private val TAG: String = ReadingActivity::class.java.name
+
+
+    override fun onClick(book: Book) {
+        Toast.makeText(this, book.name, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClick(view: View?, book: Book) {
+        val popUp : PopupMenu = PopupMenu(this, view )
+        popUp.inflate(R.menu.reading_item_menu)
+        popUp.setOnMenuItemClickListener {
+           when(it.itemId){
+                R.id.action_move_to_read -> {
+                    mViewModel.moveToRead(book)
+                    adapter.notifyDataSetChanged()
+                    return@setOnMenuItemClickListener true
+                }
+               R.id.action_move_to_read_later -> {
+                   mViewModel.moveToReadLater(book)
+                   adapter.notifyDataSetChanged()
+                   return@setOnMenuItemClickListener true
+               }
+
+               R.id.action_book_delete -> {
+                   mViewModel.deleteBook(book)
+                   return@setOnMenuItemClickListener true
+               }
+                else -> {
+                    return@setOnMenuItemClickListener true
+                }
+            }
+        }
+
+        popUp.show()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +75,8 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setSupportActionBar(toolbar)
         initViewModel()
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        getBooks(initRecyclerView())
+        adapter =initRecyclerView()
+        getBooks(adapter)
 
         fab.setOnClickListener { view ->
             initSearchDialog()
@@ -135,7 +166,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         alertDialogBuilder.setPositiveButton(getString(R.string.search)) { dialogInterface, i ->
             Toast.makeText(this,searchQuery.text, Toast.LENGTH_SHORT).show()
         }.setNegativeButton(getString(R.string.manual)) { dialogInterface: DialogInterface?, i: Int ->
-            dialogInterface?.cancel()
+            startActivity(AddActivity.newInstance(this))
         }.setNeutralButton( getString(R.string.cancel)) { dialogInterface: DialogInterface?, i: Int ->
             dialogInterface?.cancel()
         }.setView(searchDialogView)

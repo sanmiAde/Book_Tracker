@@ -30,11 +30,11 @@ abstract class AppDatabase : RoomDatabase() {
         private const val  DB_NAME ="database"
 
 
-        private fun createBook(name: Int, state: BookState): Book = Book(name = "ssa$name",author = "sds",genre= "dfd", numberOfPages = 12, rating= 4.0, readYear = "2018",state= state,created_at =  Date(), updated_at =  Date())
-
-       private fun createNote(name: Int, bookId: Int) : Note = Note("sdskndsk$name", Date(), Date(), bookId)
-
-       private fun createGoal(year: String): Goal = Goal(0,0, year,Date(), Date())
+//        private fun createBook(name: Int, state: BookState): Book = Book(name = "ssa$name",author = "sds",genre= "dfd", numberOfPages = 12, rating= 4.0, readYear = "2018",state= state,created_at =  Date(), updated_at =  Date())
+//
+//       private fun createNote(name: Int, bookId: Int) : Note = Note("sdskndsk$name", Date(), Date(), bookId)
+//
+//       private fun createGoal(year: String): Goal = Goal(0,0, year,Date(), Date())
 
         /***
          * Creates database
@@ -44,32 +44,8 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(context: Context, memoryOnly: Boolean): AppDatabase {
             when (sBuilder) {
                 null -> sBuilder = when {
-                    memoryOnly -> Room.inMemoryDatabaseBuilder(context.applicationContext, AppDatabase::class.java )
-                    else -> Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DB_NAME).addCallback(object  : Callback(){
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-
-                            val executor = AppExecutors.getExecutor()
-                            val callbackDb = AppDatabase.getDatabase(context,false)
-                            val bookDao = callbackDb.bookDao()
-                            val noteDao = callbackDb.noteDao()
-                            val goalDao  = callbackDb.goalDao()
-
-                            (1..20).forEach { i ->
-                                executor.diskIO().execute {bookDao.insert(createBook(i, BookState.READING))}
-                            }
-
-                            (20..40).forEach { i ->
-                                executor.diskIO().execute {bookDao.insert(createBook(i, BookState.READ))}
-                            }
-
-                            (40..60).forEach { i ->
-                                executor.diskIO().execute {bookDao.insert(createBook(i, BookState.TO_READ))}
-                            }
-
-                        }
-
-                    })
+                    memoryOnly -> Room.inMemoryDatabaseBuilder(context.applicationContext, AppDatabase::class.java)
+                    else -> Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DB_NAME)
                 }
             }
             return  sBuilder!!.build()
@@ -80,4 +56,33 @@ abstract class AppDatabase : RoomDatabase() {
 
 
 }
+
+
+//.addCallback(object  : RoomDatabase.Callback(){
+//    override fun onCreate(db: SupportSQLiteDatabase) {
+//        super.onCreate(db)
+//
+//        val executor = AppExecutors.getExecutor()
+//        val callbackDb = AppDatabase.getDatabase(context,false)
+//        val bookDao = callbackDb.bookDao()
+//        val noteDao = callbackDb.noteDao()
+//        val goalDao  = callbackDb.goalDao()
+//
+//        (1..20).forEach { i ->
+//            executor.diskIO().execute {bookDao.insert(AppDatabase.createBook(i, BookState.READING))}
+//        }
+//
+//        (20..40).forEach { i ->
+//            executor.diskIO().execute {bookDao.insert(AppDatabase.createBook(i, BookState.READ))}
+//        }
+//
+//        (40..60).forEach { i ->
+//            executor.diskIO().execute {bookDao.insert(AppDatabase.createBook(i, BookState.TO_READ))}
+//        }
+//
+//    }
+//
+//})
+//}
+//
 

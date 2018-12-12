@@ -12,4 +12,6 @@ class ToReadViewModel(application: Application) : BaseViewModel(application) {
         return  repository.getBookByState(BookState.READ)
     }
     // TODO: Implement the ViewModel
+
+
 }

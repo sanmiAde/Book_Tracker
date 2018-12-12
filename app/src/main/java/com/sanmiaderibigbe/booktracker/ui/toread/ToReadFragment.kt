@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
@@ -23,8 +24,32 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
         Toast.makeText(activity, book.author, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onClick() {
-        Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show()
+    override fun onClick(view: View?, book: Book) {
+        val popUp : PopupMenu = PopupMenu(activity!!, view )
+        popUp.inflate(R.menu.to_read_item_menu)
+
+        popUp.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.action_move_to_reading -> {
+                    viewModel.moveToReading(book)
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.action_move_to_read-> {
+                    viewModel.moveToReadLater(book)
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.action_book_delete -> {
+                    viewModel.deleteBook(book)
+                    return@setOnMenuItemClickListener true
+                }
+                else -> {
+                    return@setOnMenuItemClickListener true
+                }
+            }
+
+        }
+        popUp.show()
+
     }
 
     companion object {
@@ -36,10 +61,15 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ToReadViewModel::class.java)
+
         val adapter = initRecyclerView(view)
         //getBooks(initRecyclerView())
         getBooks(adapter)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(ToReadViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

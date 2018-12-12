@@ -11,6 +11,4 @@ class ReadViewModel(application: Application) : BaseViewModel(application) {
        return  repository.getBookByState(BookState.READ)
     }
 
-
-
 }

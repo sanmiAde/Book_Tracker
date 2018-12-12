@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_move_to_reading"
+        android:orderInCategory="100"
+        android:title="@string/move_to_reading"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_move_to_read"
+        android:orderInCategory="100"
+        android:title= "@string/move_to_read"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_share_book"
+        android:orderInCategory="100"
+        android:title="@string/share_book"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_book_delete"
+        android:orderInCategory="100"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+
+</menu>

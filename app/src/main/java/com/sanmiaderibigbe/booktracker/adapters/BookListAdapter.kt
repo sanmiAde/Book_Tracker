@@ -13,7 +13,7 @@ class BookListAdapter(context: Context, val clickHandler: OnMenuClickHandler) : 
     private var bookList: List<Book>? = null
 
    interface OnMenuClickHandler{
-       fun onClick()
+       fun onClick(view: View?, book: Book)
 
        fun onClick(book: Book)
    }
@@ -47,9 +47,10 @@ class BookListAdapter(context: Context, val clickHandler: OnMenuClickHandler) : 
         }
 
         override fun onClick(view: View?) {
+
             when(view?.id)  {
                 binding.itemMenu.id -> {
-                    clickHandler.onClick()
+                    clickHandler.onClick(view,binding.book!!)
                 }
                 binding.bookNameTxt.id -> {
                     clickHandler.onClick(binding.book!!)
