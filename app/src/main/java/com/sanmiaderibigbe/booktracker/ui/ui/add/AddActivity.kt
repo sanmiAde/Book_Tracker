@@ -15,22 +15,12 @@ import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.data.model.BookState
 import kotlinx.android.synthetic.main.add_activity.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddActivity : AppCompatActivity() , Validator.ValidationListener, AdapterView.OnItemSelectedListener, DatePickerFragment.InterfaceCommunicator  {
-
-    override fun sendRequestCode(date: Date, viewId: Int) {
-        when(viewId) {
-            start_date_btn.id -> {
-                updateStartDate(date)
-            }
-            end_date_btn.id -> {
-                updateEndDate(date)
-            }
-        }
-    }
 
 
     @NotEmpty
@@ -77,6 +67,18 @@ class AddActivity : AppCompatActivity() , Validator.ValidationListener, AdapterV
         updateStartDate(Date())
 
     }
+
+    override fun sendRequestCode(date: Date, viewId: Int) {
+        when(viewId) {
+            start_date_btn.id -> {
+                updateStartDate(date)
+            }
+            end_date_btn.id -> {
+                updateEndDate(date)
+            }
+        }
+    }
+
 
     private fun initValidator() {
         validator = Validator(this)
@@ -156,11 +158,29 @@ class AddActivity : AppCompatActivity() , Validator.ValidationListener, AdapterV
         val bookPages = lastPageEditText.text.toString().toInt()
 
         val bookState = currentBookState
-        val currentDate = convertStringToDate(start_date_btn.text.toString())
-        val year = getYear(currentDate)
-        val endDate: Date?= convertStringToDate(end_date_btn.text.toString())
-        Toast.makeText(this, currentDate.year.toString(), Toast.LENGTH_SHORT ).show()
+        val currentDate :Date?
+        var year : String?
+        var endDate: Date?
 
+        when(bookState){
+            BookState.READING -> {
+                currentDate = convertStringToDate(start_date_btn.text.toString())
+                rating = 0
+                endDate = null
+            }
+
+            BookState.TO_READ -> {
+                currentDate = null
+                rating = 0
+                endDate = null
+            }
+            BookState.READ -> {
+                currentDate = convertStringToDate(start_date_btn.text.toString())
+                endDate    = convertStringToDate(end_date_btn.text.toString())
+            }
+        }
+
+        year = getYear(currentDate)
         val book = Book(0, bookName, author, genre, currentPage,  bookPages,rating.toDouble(), year.toString(), state = bookState, created_at = currentDate, end_date = endDate,  updated_at = Date())
 
         return book
@@ -169,12 +189,21 @@ class AddActivity : AppCompatActivity() , Validator.ValidationListener, AdapterV
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         currentBookState = when(parent?.getItemAtPosition(pos)){
             "READING" -> {
+                disableRating(true)
+                disableEndDateButton(true)
                 BookState.READING
+
             }
             "READ" -> {
+                disableRating(false)
+                disableEndDateButton(false)
+                disableStartDateButton(false)
                 BookState.READ
             }
             "READ LATER" -> {
+                disableRating(true)
+                disableEndDateButton(true)
+                disableStartDateButton(true)
                 BookState.TO_READ
             }
             else ->{
@@ -188,11 +217,25 @@ class AddActivity : AppCompatActivity() , Validator.ValidationListener, AdapterV
 
     }
 
-    private fun getYear(date: Date): Int {
-        val cal = Calendar.getInstance()
-        cal.time = date
-        return  cal.get(Calendar.YEAR)
+    private fun disableEndDateButton(shouldDisable: Boolean){
+         end_date_btn.isEnabled =  !shouldDisable
+    }
 
+    private fun disableStartDateButton(shouldDisable: Boolean){
+        start_date_btn.isEnabled = !shouldDisable
+    }
+
+    private  fun disableRating(shouldDisable: Boolean){
+        bookRatingBar.isEnabled = !shouldDisable
+    }
+
+    private fun getYear(date: Date?): String? {
+        if(date != null){
+            val cal = Calendar.getInstance()
+            cal.time = date
+            return  cal.get(Calendar.YEAR).toString()
+        }
+        return null
     }
 
 

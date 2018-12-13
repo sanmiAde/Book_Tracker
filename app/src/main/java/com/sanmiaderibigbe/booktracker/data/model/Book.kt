@@ -24,7 +24,7 @@ data class Book(
         val goalId : Long? =null,
         //val currentPage : Int,
         val state: BookState?,
-        val created_at : Date,
+        val created_at : Date?,
         val end_date : Date?,
         val updated_at : Date ) : IBook {
 
