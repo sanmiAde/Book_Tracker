@@ -15,12 +15,13 @@ import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
 import com.sanmiaderibigbe.booktracker.data.model.Book
-import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
+import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 
 
 class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
 
     override fun onClick(book: Book) {
+        activity?.startActivity(AddActivity.newInstance(context!!, true, book))
         Toast.makeText(activity, book.author, Toast.LENGTH_SHORT).show()
     }
 
@@ -40,6 +41,10 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
                 }
                 R.id.action_book_delete -> {
                     viewModel.deleteBook(book)
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.action_share_book -> {
+                    Toast.makeText(activity, "Sgaring ${book.name}", Toast.LENGTH_SHORT).show()
                     return@setOnMenuItemClickListener true
                 }
                 else -> {
@@ -75,11 +80,6 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.to_read_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
     }
 
 

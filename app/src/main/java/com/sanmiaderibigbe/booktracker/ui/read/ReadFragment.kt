@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
 import com.sanmiaderibigbe.booktracker.data.model.Book
+import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 
 
 class ReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
@@ -51,7 +52,7 @@ class ReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
     }
 
     override fun onClick(book: Book) {
-        viewModel.moveToReading(book)
+        activity?.startActivity(AddActivity.newInstance(this.context!!, true, book))
         Toast.makeText(activity, book.name, Toast.LENGTH_SHORT).show()
     }
 
@@ -80,14 +81,6 @@ class ReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
             }
         }
         popUp.show()
-    }
-
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        // TODO: Use the ViewMode
-
     }
 
 

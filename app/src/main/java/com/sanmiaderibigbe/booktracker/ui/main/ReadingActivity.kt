@@ -20,9 +20,9 @@ import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
 import com.sanmiaderibigbe.booktracker.data.model.Book
-import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 import com.sanmiaderibigbe.booktracker.ui.read.ReadActivity
 import com.sanmiaderibigbe.booktracker.ui.toread.ToReadActivity
+import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -35,6 +35,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
     override fun onClick(book: Book) {
+        startActivity(AddActivity.newInstance(this, true, book))
         Toast.makeText(this, book.name, Toast.LENGTH_SHORT).show()
     }
 
@@ -166,7 +167,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         alertDialogBuilder.setPositiveButton(getString(R.string.search)) { dialogInterface, i ->
             Toast.makeText(this,searchQuery.text, Toast.LENGTH_SHORT).show()
         }.setNegativeButton(getString(R.string.manual)) { dialogInterface: DialogInterface?, i: Int ->
-            startActivity(AddActivity.newInstance(this))
+            startActivity(AddActivity.newInstance(this, false, null))
         }.setNeutralButton( getString(R.string.cancel)) { dialogInterface: DialogInterface?, i: Int ->
             dialogInterface?.cancel()
         }.setView(searchDialogView)

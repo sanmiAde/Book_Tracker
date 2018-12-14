@@ -19,9 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.read.ReadActivity" />
-        <activity android:name=".ui.toread.ToReadActivity" />
-        <activity android:name=".ui.ui.add.AddActivity"></activity>
+        <activity
+            android:name=".ui.read.ReadActivity"
+            android:parentActivityName=".ui.main.ReadingActivity" />
+        <activity
+            android:name=".ui.toread.ToReadActivity"
+            android:parentActivityName=".ui.main.ReadingActivity" />
+        <activity
+            android:name=".ui.ui.add.AddActivity"
+            android:parentActivityName=".ui.main.ReadingActivity"></activity>
     </application>
 
 </manifest>

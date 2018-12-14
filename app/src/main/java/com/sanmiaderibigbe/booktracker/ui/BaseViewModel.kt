@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData
 import com.sanmiaderibigbe.booktracker.data.Repository
 import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.data.model.BookState
+import java.util.*
 
 open abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -13,17 +14,17 @@ open abstract class BaseViewModel(application: Application) : AndroidViewModel(a
     abstract fun getBookList() : LiveData<List<Book>>
 
     fun moveToReading(book: Book) {
-        val updatedBook = book.copy(state = BookState.READING)
+        val updatedBook = book.copy(state = BookState.READING, updated_at = Date())
         repository.updateBook(updatedBook)
     }
 
     fun moveToReadLater(book: Book){
-        val updatedBook = book.copy(state = BookState.TO_READ)
+        val updatedBook = book.copy(state = BookState.TO_READ, updated_at = Date())
         repository.updateBook(updatedBook)
     }
 
     fun moveToRead(book: Book) {
-        val updatedBook = book.copy(state = BookState.READ)
+        val updatedBook = book.copy(state = BookState.READ, updated_at = Date())
         repository.updateBook(updatedBook)
     }
 
