@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.PopupMenu
+import android.widget.RatingBar
 import android.widget.Toast
 import com.sanmiaderibigbe.booktracker.R
 import com.sanmiaderibigbe.booktracker.adapters.BookListAdapter
@@ -25,6 +26,7 @@ import com.sanmiaderibigbe.booktracker.ui.toread.ToReadActivity
 import com.sanmiaderibigbe.booktracker.ui.ui.add.AddActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.util.*
 
 class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, BookListAdapter.OnMenuClickHandler {
 
@@ -45,13 +47,14 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         popUp.setOnMenuItemClickListener {
            when(it.itemId){
                 R.id.action_move_to_read -> {
-                    mViewModel.moveToRead(book)
-                    adapter.notifyDataSetChanged()
+                    initBookRating(book)
+                    //Todo ask for rating
+
                     return@setOnMenuItemClickListener true
                 }
                R.id.action_move_to_read_later -> {
                    mViewModel.moveToReadLater(book)
-                   adapter.notifyDataSetChanged()
+
                    return@setOnMenuItemClickListener true
                }
 
@@ -171,6 +174,31 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }.setNeutralButton( getString(R.string.cancel)) { dialogInterface: DialogInterface?, i: Int ->
             dialogInterface?.cancel()
         }.setView(searchDialogView)
+
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun initBookRating(book: Book) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        val ratingDialogView = this.layoutInflater.inflate(R.layout.dialog_rating, null)
+        val ratingBar = ratingDialogView.findViewById<RatingBar>(R.id.book_rating)
+        var updatedBook: Book = Book(0, "", "", "", 0, 0, 0.0, "", null, null, null, null, Date())
+
+        ratingBar.setOnRatingBarChangeListener { ratingBar, fl, b ->
+            updatedBook = book.copy(rating = fl.toDouble())
+            Toast.makeText(this, updatedBook.rating.toString(), Toast.LENGTH_SHORT).show()
+        }
+        ratingBar.rating
+        alertDialogBuilder.setTitle("Rate ${book.name}")
+
+        alertDialogBuilder.setPositiveButton(getString(R.string.okay)) { dialogInterface, i ->
+            mViewModel.moveToRead(updatedBook)
+            dialogInterface?.cancel()
+
+        }.setNegativeButton(getString(R.string.cancel_move_to_read)) { dialogInterface: DialogInterface?, i: Int ->
+            dialogInterface?.cancel()
+        }.setView(ratingDialogView)
 
         val alertDialog: AlertDialog = alertDialogBuilder.create()
         alertDialog.show()

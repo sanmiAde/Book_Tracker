@@ -142,6 +142,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
                     }
                 }
 
+
                 start_date_btn.text = convertDateToString(toEditBook.created_at)
                 end_date_btn.text = convertDateToString(toEditBook.end_date)
             }

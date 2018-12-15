@@ -27,4 +27,6 @@
     <string name="share_book">Share</string>
     <string name="delete">Delete</string>
     <string name="move_to_reading">Move to reading</string>
+    <string name="cancel_move_to_read">cancel</string>
+    <string name="okay">OKAY</string>
 </resources>
