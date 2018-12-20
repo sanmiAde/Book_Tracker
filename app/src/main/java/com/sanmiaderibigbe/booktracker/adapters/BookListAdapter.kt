@@ -11,6 +11,7 @@ import com.sanmiaderibigbe.booktracker.databinding.AdapterListBookItemBinding
 class BookListAdapter(context: Context, val clickHandler: OnMenuClickHandler) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
     private var bookList: List<Book>? = null
+    private var shouldHideRating: Boolean = false
 
    interface OnMenuClickHandler{
        fun onClick(view: View?, book: Book)
@@ -27,14 +28,26 @@ class BookListAdapter(context: Context, val clickHandler: OnMenuClickHandler) : 
        return bookList?.size ?: 0
     }
 
+    private var shouldHideProgress: Boolean = false
+
     override fun onBindViewHolder(holder: ViewHolder, p1: Int) {
-       val book: Book? = bookList?.get(p1)
+        val book: Book? = bookList?.get(p1)
         holder.binding.book = book
+        if (shouldHideProgress) {
+            holder.binding.bookProgressTxt.visibility = View.INVISIBLE
+        } else {
+            val progress = book?.currentPage?.toFloat()?.div(book.numberOfPages.toFloat())?.times(100.00)
+            holder.binding.bookProgressTxt.text = "${Math.round(progress?.times(100.0)?.div(100.0)!!)}% complete"
+        }
+        if (shouldHideRating) {
+            holder.binding.ratingBar.visibility = View.INVISIBLE
+        }
     }
 
 
-
-    fun setBooks(books: List<Book>?){
+    fun setBooks(books: List<Book>?, hideRating: Boolean = false, hideProgress: Boolean = false) {
+        shouldHideRating = hideRating
+        shouldHideProgress = hideProgress
         bookList = books
         notifyDataSetChanged()
     }

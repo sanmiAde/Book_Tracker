@@ -44,7 +44,7 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
                     return@setOnMenuItemClickListener true
                 }
                 R.id.action_share_book -> {
-                    Toast.makeText(activity, "Sgaring ${book.name}", Toast.LENGTH_SHORT).show()
+
                     return@setOnMenuItemClickListener true
                 }
                 else -> {
@@ -94,7 +94,7 @@ class ToReadFragment : Fragment(), BookListAdapter.OnMenuClickHandler {
     private fun getBooks(adapter: BookListAdapter) {
         viewModel.getBookList().observe(this, Observer { it ->
             Log.d(TAG, it.toString())
-            adapter.setBooks(it)
+            adapter.setBooks(it, true)
 
         })
     }

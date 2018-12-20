@@ -1,6 +1,5 @@
 package com.sanmiaderibigbe.booktracker.data.database
 
-import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
@@ -8,21 +7,22 @@ import android.content.Context
 import com.sanmiaderibigbe.booktracker.data.converter.BookStateConverter
 import com.sanmiaderibigbe.booktracker.data.converter.DateConverter
 import com.sanmiaderibigbe.booktracker.data.database.dao.BookDao
-import com.sanmiaderibigbe.booktracker.data.database.dao.NoteDao
+import com.sanmiaderibigbe.booktracker.data.database.dao.CacheBookDao
 import com.sanmiaderibigbe.booktracker.data.database.dao.GoalDao
+import com.sanmiaderibigbe.booktracker.data.database.dao.NoteDao
 import com.sanmiaderibigbe.booktracker.data.model.Book
-import com.sanmiaderibigbe.booktracker.data.model.BookState
+import com.sanmiaderibigbe.booktracker.data.model.CacheBook
 import com.sanmiaderibigbe.booktracker.data.model.Goal
 import com.sanmiaderibigbe.booktracker.data.model.Note
-import com.sanmiaderibigbe.booktracker.utils.AppExecutors
-import java.util.*
+
 @TypeConverters(DateConverter::class, BookStateConverter::class)
-@android.arch.persistence.room.Database(entities = [Book::class, Goal::class, Note::class], version = 1)
+@android.arch.persistence.room.Database(entities = [Book::class, Goal::class, Note::class, CacheBook::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun bookDao() : BookDao
     abstract fun noteDao(): NoteDao
     abstract fun goalDao(): GoalDao
+    abstract fun cacheDao(): CacheBookDao
 
     //Todo export schema
     companion object {

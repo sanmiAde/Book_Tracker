@@ -14,15 +14,24 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_book_progress"
+        android:orderInCategory="100"
+        android:title="@string/book_progress"
+        app:showAsAction="never" />
+
+
+    <item
         android:id="@+id/action_share_book"
         android:orderInCategory="100"
         android:title="@string/share_book"
         app:showAsAction="never" />
+
 
     <item
         android:id="@+id/action_book_delete"
         android:orderInCategory="100"
         android:title="@string/delete"
         app:showAsAction="never" />
+
 
 </menu>

@@ -1,24 +1,19 @@
-package com.sanmiaderibigbe.booktracker.ui.ui.add
+package com.sanmiaderibigbe.booktracker.ui.goal
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import com.sanmiaderibigbe.booktracker.data.Repository
-import com.sanmiaderibigbe.booktracker.data.model.Book
 import com.sanmiaderibigbe.booktracker.data.model.Goal
+import java.util.*
 
-class AddViewModel(application: Application) : AndroidViewModel(application) {
+class GoalViewModel(application: Application) : AndroidViewModel(application) {
+// TODO: Implement the ViewModel
 
     private val repository: Repository = Repository.getRepository(application)
 
-
-    fun saveBook(book : Book){
-        repository.saveBook(book)
+    fun saveGoal(numberOfBooks: Int, year: String, createdDate: Date) {
+        repository.saveGoal(Goal(numberOfBooks, year, true, createdDate, Date()))
     }
-
-    fun updateBook(book: Book) {
-        repository.updateBook(book)
-    }
-
 
     fun getGoal(year: String): Goal? {
         return repository.getGoal(year)

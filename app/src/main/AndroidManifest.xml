@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.main.ReadingActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/reading"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,13 +21,16 @@
         </activity>
         <activity
             android:name=".ui.read.ReadActivity"
+            android:label="@string/books_read"
             android:parentActivityName=".ui.main.ReadingActivity" />
         <activity
             android:name=".ui.toread.ToReadActivity"
+            android:label="@string/books_to_read"
             android:parentActivityName=".ui.main.ReadingActivity" />
         <activity
             android:name=".ui.ui.add.AddActivity"
-            android:parentActivityName=".ui.main.ReadingActivity"></activity>
+            android:parentActivityName=".ui.main.ReadingActivity" />
+        <activity android:name=".ui.goal.GoalActivity"></activity>
     </application>
 
 </manifest>

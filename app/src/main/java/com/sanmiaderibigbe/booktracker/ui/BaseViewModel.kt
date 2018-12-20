@@ -14,7 +14,7 @@ open abstract class BaseViewModel(application: Application) : AndroidViewModel(a
     abstract fun getBookList() : LiveData<List<Book>>
 
     fun moveToReading(book: Book) {
-        val updatedBook = book.copy(state = BookState.READING, updated_at = Date(), created_at = Date(), end_date = null)
+        val updatedBook = book.copy(state = BookState.READING, updated_at = Date(), created_at = Date(), end_date = null, currentPage = 0)
         repository.updateBook(updatedBook)
     }
 

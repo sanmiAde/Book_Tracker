@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
@@ -62,6 +61,16 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                    mViewModel.deleteBook(book)
                    return@setOnMenuItemClickListener true
                }
+//               R.id.action_share_book -> {
+//
+//               }
+
+               R.id.action_book_progress -> {
+                   initUpdateBookDialog(book)
+
+                   return@setOnMenuItemClickListener true
+               }
+
                 else -> {
                     return@setOnMenuItemClickListener true
                 }
@@ -69,6 +78,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
 
         popUp.show()
+
     }
 
 
@@ -87,6 +97,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
 
         initDrawer()
+
     }
 
     private fun initViewModel() {
@@ -96,7 +107,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun getBooks(adapter: BookListAdapter) {
         mViewModel.getBookList().observe(this, Observer { it ->
-            adapter.setBooks(it)
+            adapter.setBooks(it, true)
 
         })
     }
@@ -118,21 +129,6 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
@@ -144,6 +140,11 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_to_read -> {
                 startActivity(ToReadActivity.newInstance(this))
             }
+
+
+//            R.id.nav_goals -> {
+//                startActivity(GoalActivity.newInstance(this))
+//            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -154,6 +155,17 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val adapter = BookListAdapter(this, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && fab.visibility == View.VISIBLE) {
+                    fab.hide()
+                } else if (dy < 0 && fab.visibility != View.VISIBLE) {
+                    fab.show()
+                }
+            }
+        })
+
         return adapter
     }
 
@@ -168,12 +180,34 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
         alertDialogBuilder.setPositiveButton(getString(R.string.search)) { dialogInterface, i ->
-            Toast.makeText(this,searchQuery.text, Toast.LENGTH_SHORT).show()
+
+            //Repository.getRepository(application).getBookDataOnline("The book thief")
         }.setNegativeButton(getString(R.string.manual)) { dialogInterface: DialogInterface?, i: Int ->
             startActivity(AddActivity.newInstance(this, false, null))
         }.setNeutralButton( getString(R.string.cancel)) { dialogInterface: DialogInterface?, i: Int ->
             dialogInterface?.cancel()
         }.setView(searchDialogView)
+
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun initUpdateBookDialog(book: Book) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        val updateProgressDialogView = this.layoutInflater.inflate(R.layout.dialog_book_progress, null)
+        val currentPage = updateProgressDialogView.findViewById<EditText>(R.id.current_book_page)
+        alertDialogBuilder.setTitle(getString(R.string.update_book_progress))
+
+
+
+        alertDialogBuilder.setPositiveButton(getString(R.string.okay)) { dialogInterface, i ->
+            mViewModel.updateBookProgress(currentPage.text.toString().toInt(), book)
+            dialogInterface?.cancel()
+
+
+        }.setNegativeButton(getString(R.string.cancel_move_to_read)) { dialogInterface: DialogInterface?, i: Int ->
+            dialogInterface?.cancel()
+        }.setView(updateProgressDialogView)
 
         val alertDialog: AlertDialog = alertDialogBuilder.create()
         alertDialog.show()
@@ -186,8 +220,9 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         var updatedBook: Book = Book(0, "", "", "", 0, 0, 0.0, "", null, null, null, null, Date())
 
         ratingBar.setOnRatingBarChangeListener { ratingBar, fl, b ->
-            updatedBook = book.copy(rating = fl.toDouble())
-            Toast.makeText(this, updatedBook.rating.toString(), Toast.LENGTH_SHORT).show()
+            updatedBook = book.copy(rating = fl.toDouble(), currentPage = book.numberOfPages)
+            //pass this to viewmodel.
+
         }
         ratingBar.rating
         alertDialogBuilder.setTitle("Rate ${book.name}")
@@ -196,6 +231,7 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             mViewModel.moveToRead(updatedBook)
             dialogInterface?.cancel()
 
+
         }.setNegativeButton(getString(R.string.cancel_move_to_read)) { dialogInterface: DialogInterface?, i: Int ->
             dialogInterface?.cancel()
         }.setView(ratingDialogView)
@@ -203,4 +239,5 @@ class ReadingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val alertDialog: AlertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
 }

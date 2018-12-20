@@ -1,6 +1,5 @@
 package com.sanmiaderibigbe.booktracker.data.database.dao
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.sanmiaderibigbe.booktracker.data.model.Goal
 import com.sanmiaderibigbe.booktracker.data.model.GoalWithBooks
@@ -9,10 +8,13 @@ import com.sanmiaderibigbe.booktracker.data.model.GoalWithBooks
 interface GoalDao {
 
     @Query("SELECT * FROM goals_table ORDER BY id")
-    fun getNotes(): List<Goal>
+    fun getGoals(): List<Goal>
 
     @Query("SELECT * FROM goals_table WHERE id =:goalid ")
-    fun getNote(goalid: Long): Goal
+    fun getGoal(goalid: Long): Goal
+
+    @Query("SELECT * FROM goals_table WHERE year =:goalYear ")
+    fun getGoalByYear(goalYear: String): Goal
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(goal: Goal) : Long

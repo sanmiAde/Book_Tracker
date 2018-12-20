@@ -55,7 +55,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_activity)
-        viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
+        initViewModel()
         initValidator()
         initViews()
         initListener()
@@ -84,8 +84,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
             }
             false -> {
                 toEditBook = Book(0, "", "", "", 0, 0, 0.0, "", null, null, null, null, Date())
-
-
+                start_date_btn.text = convertDateToString(Date())
             }
         }
 
@@ -131,7 +130,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
                 //Todo its not filling properly
                 when (toEditBook.state) {
                     BookState.READING -> {
-                        bookStateSpinner.prompt = "READING"
+                        //bookStateSpinner.set = "READING"
                     }
 
                     BookState.TO_READ -> {
@@ -174,7 +173,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
     }
 
     override fun onValidationSucceeded() {
-        Toast.makeText(this, "Yay, Validation works", Toast.LENGTH_SHORT).show()
+
         when (shouldEdit) {
             true -> {
                 viewModel.updateBook(getUserInput(true))
@@ -184,6 +183,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
             }
         }
 
+        finish()
     }
 
 
@@ -191,6 +191,7 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
         viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
 
     }
+
 
     private fun getUserInput(isUpdatedData: Boolean): Book {
         val bookName = bookNameEditText.text.toString()
@@ -209,20 +210,23 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
                 currentDate = convertStringToDate(start_date_btn.text.toString())
                 rating = 0
                 endDate = null
+
             }
 
             BookState.TO_READ -> {
                 currentDate = null
                 rating = 0
                 endDate = null
+
             }
             BookState.READ -> {
                 currentDate = convertStringToDate(start_date_btn.text.toString())
                 endDate = convertStringToDate(end_date_btn.text.toString())
+
             }
         }
-
         year = getYear(currentDate)
+
         return when (isUpdatedData) {
             true -> {
                 return toEditBook.copy(name = bookName, author = author, genre = genre, currentPage = currentPage, numberOfPages = bookPages, rating = rating.toDouble(), readYear = year.toString(), state = bookState, created_at = currentDate, end_date = endDate, updated_at = Date())
@@ -258,7 +262,6 @@ class AddActivity : AppCompatActivity(), Validator.ValidationListener, AdapterVi
                 BookState.READING
             }
         }
-        Toast.makeText(this, currentBookState.toString(), Toast.LENGTH_SHORT).show()
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

@@ -3,8 +3,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Book Tracker by Oluwasanmi Aderibigbe</string>
+    <string name="nav_header_subtitle">sanmiaderibigbe@outlook.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -17,7 +17,6 @@
     <string name="read">READ</string>
     <string name="goals">GOALS</string>
     <string name="statistics">STATISTICS</string>
-    <string name="reading">READING</string>
     <string name="search_for_book">Search for book</string>
     <string name="search">SEARCH</string>
     <string name="manual">MANUAL</string>
@@ -29,4 +28,9 @@
     <string name="move_to_reading">Move to reading</string>
     <string name="cancel_move_to_read">cancel</string>
     <string name="okay">OKAY</string>
+    <string name="books_read">BOOKS READ</string>
+    <string name="books_to_read">BOOKS TO READ</string>
+    <string name="reading">READING</string>
+    <string name="book_progress">Update Progress</string>
+    <string name="update_book_progress">Update Book Progress</string>
 </resources>

@@ -12,7 +12,10 @@ class ReadingViewModel(application: Application): BaseViewModel(application) {
         return  repository.getBookByState(BookState.READING)
     }
 
-
+    fun updateBookProgress(currentPage: Int, book: Book) {
+        val updatedBook = book.copy(currentPage = currentPage)
+        repository.saveBook(updatedBook)
+    }
 
 
 }
